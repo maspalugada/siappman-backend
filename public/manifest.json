@@ -1,0 +1,28 @@
+{
+    "name": "SiAPPMan QR Scanner",
+    "short_name": "SiAPPMan",
+    "description": "Progressive Web App for QR Code Scanning and Asset Management",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#007bff",
+    "orientation": "portrait-primary",
+    "scope": "/",
+    "icons": [
+        {
+            "src": "/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "categories": ["productivity", "utilities"],
+    "lang": "en-US",
+    "dir": "ltr"
+}
