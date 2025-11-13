@@ -41,7 +41,7 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+<script src="{{ asset('js/qrcode.min.js') }}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         new QRCode(document.getElementById('qrCodeContainer'), {
