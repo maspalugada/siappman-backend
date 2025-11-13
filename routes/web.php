@@ -59,6 +59,19 @@ Route::middleware('auth')->group(function () {
     ]);
     Route::get('/dashboard/assets/{asset}/qr', [AssetController::class, 'generateQr'])->name('dashboard.assets.qr');
 
+    // Instrument Set Management
+    Route::resource('/dashboard/instrument-sets', \App\Http\Controllers\InstrumentSetController::class, [
+        'names' => [
+            'index' => 'dashboard.instrument-sets.index',
+            'create' => 'dashboard.instrument-sets.create',
+            'store' => 'dashboard.instrument-sets.store',
+            'show' => 'dashboard.instrument-sets.show',
+            'edit' => 'dashboard.instrument-sets.edit',
+            'update' => 'dashboard.instrument-sets.update',
+            'destroy' => 'dashboard.instrument-sets.destroy',
+        ]
+    ]);
+
     // Scan History
     Route::get('/dashboard/scan-history', [DashboardController::class, 'scanHistory'])->name('dashboard.scan-history');
 

@@ -332,6 +332,12 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{ route('dashboard.instrument-sets.index') }}" class="{{ request()->routeIs('dashboard.instrument-sets*') ? 'active' : '' }}">
+                        <div class="sidebar-icon">-</div>
+                        <span class="sidebar-text">Instrument Sets</span>
+                    </a>
+                </li>
+                <li>
                     <a href="{{ route('dashboard.qr-codes') }}" class="{{ request()->routeIs('dashboard.qr-codes*') ? 'active' : '' }}">
                         <div class="sidebar-icon">📱</div>
                         <span class="sidebar-text">Kode QR</span>

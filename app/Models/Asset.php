@@ -29,4 +29,9 @@ class Asset extends Model
     {
         return 'ASSET-' . strtoupper(substr(md5($this->id . $this->name), 0, 8));
     }
+
+    public function instrumentSets()
+    {
+        return $this->belongsToMany(InstrumentSet::class);
+    }
 }
