@@ -89,7 +89,7 @@ class AssetController extends Controller
         $asset->location = $request->location;
         $asset->description = $request->description;
         $asset->specifications = $request->specifications;
-        $asset->qr_code = 'ASSET-' . strtoupper(Str::random(8));
+        $asset->qr_code = 'ASSET-' . strtoupper(Str::uuid()->toString());
         $asset->save();
 
         return redirect()->route('dashboard.assets.index')->with('success', 'Asset created successfully.');
@@ -263,7 +263,7 @@ class AssetController extends Controller
         $asset->description = $request->description;
         $asset->specifications = $request->specifications;
         $asset->status = $request->status;
-        $asset->qr_code = 'ASSET-' . strtoupper(Str::random(8));
+        $asset->qr_code = 'ASSET-' . strtoupper(Str::uuid()->toString());
         $asset->save();
 
         // Generate QR code data
