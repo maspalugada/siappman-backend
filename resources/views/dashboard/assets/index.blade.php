@@ -15,6 +15,16 @@
         </a>
     </div>
 
+    <!-- Search Form -->
+    <div style="margin-bottom: 2rem;">
+        <form action="{{ route('dashboard.assets.index') }}" method="GET">
+            <div style="display: flex; gap: 1rem;">
+                <input type="text" name="search" placeholder="Search by asset name..." value="{{ request('search') }}" style="flex-grow: 1; padding: 0.75rem 1rem; border: 1px solid var(--gray-300); border-radius: 0.5rem;">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </form>
+    </div>
+
     @if($assets->count() > 0)
         <div class="card">
             <div class="card-body">
@@ -72,7 +82,7 @@
 
                 @if($assets->hasPages())
                     <div style="margin-top: 2rem; display: flex; justify-content: center;">
-                        {{ $assets->links() }}
+                        {{ $assets->appends(request()->query())->links() }}
                     </div>
                 @endif
             </div>

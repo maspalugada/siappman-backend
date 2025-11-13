@@ -17,9 +17,15 @@ class AssetController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $assets = Asset::latest()->paginate(10);
+        $query = Asset::query();
+
+        if ($request->has('search')) {
+            $query->where('name', 'like', '%' . $request->input('search') . '%');
+        }
+
+        $assets = $query->latest()->paginate(10);
         return view('dashboard.assets.index', compact('assets'));
     }
 
