@@ -18,6 +18,9 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet" />
 
+    <!-- Toastify.js assets -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
     <style>
         :root {
             --primary-color: #20B2AA;
@@ -381,18 +384,6 @@
     @endif
 
     <main class="{{ request()->routeIs('dashboard*') || request()->routeIs('scanner') ? 'main-content' : '' }}">
-        @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        @if(session('error'))
-            <div class="alert alert-error">
-                {{ session('error') }}
-            </div>
-        @endif
-
         @yield('content')
     </main>
 
@@ -418,5 +409,36 @@
 
     @vite(['resources/js/app.js'])
     @stack('scripts')
+
+    <!-- Toastify.js assets -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            @if(session('success'))
+                Toastify({
+                    text: "{{ session('success') }}",
+                    duration: 3000,
+                    close: true,
+                    gravity: "top", // `top` or `bottom`
+                    position: "right", // `left`, `center` or `right`
+                    backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+                    stopOnFocus: true, // Prevents dismissing of toast on hover
+                }).showToast();
+            @endif
+
+            @if(session('error'))
+                Toastify({
+                    text: "{{ session('error') }}",
+                    duration: 3000,
+                    close: true,
+                    gravity: "top",
+                    position: "right",
+                    backgroundColor: "linear-gradient(to right, #ff5f6d, #ffc371)",
+                    stopOnFocus: true,
+                }).showToast();
+            @endif
+        });
+    </script>
 </body>
 </html>
