@@ -18,35 +18,53 @@ class ScannerController extends Controller
             'location' => 'nullable|string',
         ]);
 
-        $qrCode = QRCode::where('code', $request->qr_code)->first();
+        $qrCode = $request->qr_code;
+        $scannable = null;
 
-        if (!$qrCode) {
-            return response()->json(['message' => 'QR Code not found'], 404);
+        if (str_starts_with($qrCode, 'ASSET-')) {
+            $scannable = \App\Models\Asset::where('qr_code', $qrCode)->first();
+        } elseif (str_starts_with($qrCode, 'SET-')) {
+            $scannable = \App\Models\InstrumentSet::where('qr_code', $qrCode)->with('assets')->first();
         }
 
-        if ($qrCode->status !== 'active') {
-            return response()->json(['message' => 'QR Code is inactive'], 403);
+        if (!$scannable) {
+            return response()->json(['message' => 'QR Code not found or invalid'], 404);
         }
 
-        $scanActivity = ScanActivity::create([
-            'qr_id' => $qrCode->id,
+        $scanData = [
             'user_id' => auth()->id(),
             'action' => $request->action,
             'notes' => $request->notes,
             'location' => $request->location,
             'scanned_at' => now(),
-        ]);
+        ];
 
-        Log::info('QR Code scanned', [
-            'qr_code_id' => $qrCode->id,
+        // Create the main scan activity for the set or asset
+        $mainScanActivity = $scannable->scanActivities()->create($scanData);
+
+        Log::info('Item scanned', [
+            'scannable_id' => $scannable->id,
+            'scannable_type' => get_class($scannable),
             'user_id' => auth()->id(),
             'action' => $request->action,
-            'location' => $request->location,
         ]);
+
+        // If it's an instrument set, also log an activity for each asset within it
+        if ($scannable instanceof \App\Models\InstrumentSet) {
+            foreach ($scannable->assets as $asset) {
+                $asset->scanActivities()->create($scanData);
+                Log::info('Asset scanned as part of a set', [
+                    'asset_id' => $asset->id,
+                    'instrument_set_id' => $scannable->id,
+                    'user_id' => auth()->id(),
+                    'action' => $request->action,
+                ]);
+            }
+        }
 
         return response()->json([
             'message' => 'Scan recorded successfully',
-            'scan_activity' => $scanActivity->load('qrCode', 'user'),
+            'scan_activity' => $mainScanActivity->load('scannable', 'user'),
         ]);
     }
 

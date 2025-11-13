@@ -34,4 +34,9 @@ class Asset extends Model
     {
         return $this->belongsToMany(InstrumentSet::class);
     }
+
+    public function scanActivities()
+    {
+        return $this->morphMany(ScanActivity::class, 'scannable');
+    }
 }

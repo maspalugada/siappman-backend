@@ -11,7 +11,8 @@ class ScanActivity extends Model
     use HasFactory;
 
     protected $fillable = [
-        'qr_id',
+        'scannable_id',
+        'scannable_type',
         'user_id',
         'action',
         'notes',
@@ -23,9 +24,9 @@ class ScanActivity extends Model
         'scanned_at' => 'datetime',
     ];
 
-    public function qrCode(): BelongsTo
+    public function scannable()
     {
-        return $this->belongsTo(QRCode::class, 'qr_id');
+        return $this->morphTo();
     }
 
     public function user(): BelongsTo

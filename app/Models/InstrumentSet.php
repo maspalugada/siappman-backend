@@ -19,4 +19,9 @@ class InstrumentSet extends Model
     {
         return $this->belongsToMany(Asset::class);
     }
+
+    public function scanActivities()
+    {
+        return $this->morphMany(ScanActivity::class, 'scannable');
+    }
 }
