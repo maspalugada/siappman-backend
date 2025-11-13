@@ -52,16 +52,26 @@
 
                     <div>
                         <label class="form-label">Status</label>
-                        <span style="
-                            padding: 0.25rem 0.75rem;
-                            border-radius: 9999px;
-                            font-size: 0.75rem;
-                            font-weight: 500;
-                            {{ $asset->status === 'active' ? 'background-color: #D1FAE5; color: #065F46;' : '' }}
-                            {{ $asset->status === 'inactive' ? 'background-color: #FEE2E2; color: #991B1B;' : '' }}
-                            {{ $asset->status === 'maintenance' ? 'background-color: #FEF3C7; color: #92400E;' : '' }}
-                        ">
-                            {{ ucfirst($asset->status) }}
+                        @php
+                            $statusClass = '';
+                            switch ($asset->status) {
+                                case 'Ready':
+                                    $statusClass = 'background-color: #D1FAE5; color: #065F46;';
+                                    break;
+                                case 'Washing':
+                                case 'Sterilizing':
+                                    $statusClass = 'background-color: #DBEAFE; color: #1E40AF;';
+                                    break;
+                                case 'In Use':
+                                    $statusClass = 'background-color: #E5E7EB; color: #374151;';
+                                    break;
+                                case 'Maintenance':
+                                    $statusClass = 'background-color: #FEF3C7; color: #92400E;';
+                                    break;
+                            }
+                        @endphp
+                        <span style="padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 500; {{ $statusClass }}">
+                            {{ $asset->status }}
                         </span>
                     </div>
 

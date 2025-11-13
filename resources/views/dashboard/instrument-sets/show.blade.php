@@ -22,7 +22,30 @@
                 </div>
                 <div>
                     <h3 style="font-weight: 600; margin-bottom: 1rem;">Details</h3>
-                    <p><strong>Description:</strong><br>{{ $instrumentSet->description ?? 'N/A' }}</p>
+                    <p><strong>Status:</strong>
+                        @php
+                            $statusClass = '';
+                            switch ($instrumentSet->status) {
+                                case 'Ready':
+                                    $statusClass = 'background-color: #D1FAE5; color: #065F46;';
+                                    break;
+                                case 'Washing':
+                                case 'Sterilizing':
+                                    $statusClass = 'background-color: #DBEAFE; color: #1E40AF;';
+                                    break;
+                                case 'In Use':
+                                    $statusClass = 'background-color: #E5E7EB; color: #374151;';
+                                    break;
+                                case 'Maintenance':
+                                    $statusClass = 'background-color: #FEF3C7; color: #92400E;';
+                                    break;
+                            }
+                        @endphp
+                        <span style="padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 500; {{ $statusClass }}">
+                            {{ $instrumentSet->status }}
+                        </span>
+                    </p>
+                    <p style="margin-top: 1rem;"><strong>Description:</strong><br>{{ $instrumentSet->description ?? 'N/A' }}</p>
                     <p><strong>Created At:</strong> {{ $instrumentSet->created_at->format('d M Y, H:i') }}</p>
 
                     <hr style="margin: 2rem 0;">

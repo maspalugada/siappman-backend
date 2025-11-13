@@ -73,7 +73,7 @@ class AssetFactory extends Factory
             'description' => $this->faker->optional()->paragraph(),
             'qr_code' => 'ASSET-' . strtoupper(Str::random(8)),
             'specifications' => $this->faker->optional()->randomElements(['Range: 0-100', 'Accuracy: ±0.5%', 'Power: 24VDC'], 2),
-            'status' => $this->faker->randomElement(['active', 'inactive', 'maintenance']),
+            'status' => $this->faker->randomElement([Asset::STATUS_READY, Asset::STATUS_WASHING, Asset::STATUS_IN_USE]),
         ];
     }
 }

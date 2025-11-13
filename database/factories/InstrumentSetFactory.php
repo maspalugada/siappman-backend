@@ -20,6 +20,7 @@ class InstrumentSetFactory extends Factory
             'name' => $this->faker->words(3, true),
             'description' => $this->faker->sentence,
             'qr_code' => 'SET-' . strtoupper(\Illuminate\Support\Str::uuid()->toString()),
+            'status' => $this->faker->randomElement([\App\Models\InstrumentSet::STATUS_READY, \App\Models\InstrumentSet::STATUS_WASHING]),
         ];
     }
 }

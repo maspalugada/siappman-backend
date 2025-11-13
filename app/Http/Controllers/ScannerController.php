@@ -42,6 +42,20 @@ class ScannerController extends Controller
         // Create the main scan activity for the set or asset
         $mainScanActivity = $scannable->scanActivities()->create($scanData);
 
+        // Update the status based on the action
+        $statusMap = [
+            'Start Washing' => \App\Models\Asset::STATUS_WASHING,
+            'Start Sterilizing' => \App\Models\Asset::STATUS_STERILIZING,
+            'Mark as Ready' => \App\Models\Asset::STATUS_READY,
+            'Mark as In Use' => \App\Models\Asset::STATUS_IN_USE,
+            'Start Maintenance' => \App\Models\Asset::STATUS_MAINTENANCE,
+        ];
+
+        if (isset($statusMap[$request->action])) {
+            $newStatus = $statusMap[$request->action];
+            $scannable->update(['status' => $newStatus]);
+        }
+
         Log::info('Item scanned', [
             'scannable_id' => $scannable->id,
             'scannable_type' => get_class($scannable),
@@ -51,6 +65,10 @@ class ScannerController extends Controller
 
         // If it's an instrument set, also log an activity for each asset within it
         if ($scannable instanceof \App\Models\InstrumentSet) {
+            if (isset($newStatus)) {
+                $scannable->assets()->update(['status' => $newStatus]);
+            }
+
             foreach ($scannable->assets as $asset) {
                 $asset->scanActivities()->create($scanData);
                 Log::info('Asset scanned as part of a set', [

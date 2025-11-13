@@ -25,6 +25,7 @@
                                 <th style="padding: 1rem; text-align: left; font-weight: 600; color: var(--gray-900);">Set Name</th>
                                 <th style="padding: 1rem; text-align: left; font-weight: 600; color: var(--gray-900);">Description</th>
                                 <th style="padding: 1rem; text-align: left; font-weight: 600; color: var(--gray-900);">Number of Assets</th>
+                                <th style="padding: 1rem; text-align: left; font-weight: 600; color: var(--gray-900);">Status</th>
                                 <th style="padding: 1rem; text-align: left; font-weight: 600; color: var(--gray-900);">Actions</th>
                             </tr>
                         </thead>
@@ -34,6 +35,29 @@
                                     <td style="padding: 1rem; color: var(--gray-900); font-weight: 500;">{{ $set->name }}</td>
                                     <td style="padding: 1rem; color: var(--gray-600);">{{ Str::limit($set->description, 50) }}</td>
                                     <td style="padding: 1rem; color: var(--gray-600);">{{ $set->assets_count }}</td>
+                                    <td style="padding: 1rem;">
+                                        @php
+                                            $statusClass = '';
+                                            switch ($set->status) {
+                                                case 'Ready':
+                                                    $statusClass = 'background-color: #D1FAE5; color: #065F46;';
+                                                    break;
+                                                case 'Washing':
+                                                case 'Sterilizing':
+                                                    $statusClass = 'background-color: #DBEAFE; color: #1E40AF;';
+                                                    break;
+                                                case 'In Use':
+                                                    $statusClass = 'background-color: #E5E7EB; color: #374151;';
+                                                    break;
+                                                case 'Maintenance':
+                                                    $statusClass = 'background-color: #FEF3C7; color: #92400E;';
+                                                    break;
+                                            }
+                                        @endphp
+                                        <span style="padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 500; {{ $statusClass }}">
+                                            {{ $set->status }}
+                                        </span>
+                                    </td>
                                     <td style="padding: 1rem;">
                                         <div style="display: flex; gap: 0.5rem;">
                                             <a href="{{ route('dashboard.instrument-sets.show', $set) }}" class="btn btn-secondary">View</a>
