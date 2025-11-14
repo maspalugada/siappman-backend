@@ -346,6 +346,26 @@
                         <span class="sidebar-text">Kode QR</span>
                     </a>
                 </li>
+                <li style="padding: 0.5rem 1rem; color: var(--gray-400); font-size: 0.875rem; font-weight: 600;">Master Data</li>
+                <li>
+                    <a href="{{ route('dashboard.instrument-types.index') }}" class="{{ request()->routeIs('dashboard.instrument-types*') ? 'active' : '' }}">
+                        <div class="sidebar-icon">-</div>
+                        <span class="sidebar-text">Instrument Types</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('dashboard.units.index') }}" class="{{ request()->routeIs('dashboard.units*') ? 'active' : '' }}">
+                        <div class="sidebar-icon">-</div>
+                        <span class="sidebar-text">Units</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('dashboard.locations.index') }}" class="{{ request()->routeIs('dashboard.locations*') ? 'active' : '' }}">
+                        <div class="sidebar-icon">-</div>
+                        <span class="sidebar-text">Locations</span>
+                    </a>
+                </li>
+                <li style="padding: 0.5rem 1rem; color: var(--gray-400); font-size: 0.875rem; font-weight: 600;">Asset Management</li>
                 <li>
                     <a href="{{ route('dashboard.assets.index') }}" class="{{ request()->routeIs('dashboard.assets*') ? 'active' : '' }}">
                         <div class="sidebar-icon">📦</div>

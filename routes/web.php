@@ -72,6 +72,41 @@ Route::middleware('auth')->group(function () {
         ]
     ]);
 
+    // Master Data Management
+    Route::resource('/dashboard/instrument-types', \App\Http\Controllers\InstrumentTypeController::class, [
+        'names' => [
+            'index' => 'dashboard.instrument-types.index',
+            'create' => 'dashboard.instrument-types.create',
+            'store' => 'dashboard.instrument-types.store',
+            'show' => 'dashboard.instrument-types.show',
+            'edit' => 'dashboard.instrument-types.edit',
+            'update' => 'dashboard.instrument-types.update',
+            'destroy' => 'dashboard.instrument-types.destroy',
+        ]
+    ]);
+    Route::resource('/dashboard/units', \App\Http\Controllers\UnitController::class, [
+        'names' => [
+            'index' => 'dashboard.units.index',
+            'create' => 'dashboard.units.create',
+            'store' => 'dashboard.units.store',
+            'show' => 'dashboard.units.show',
+            'edit' => 'dashboard.units.edit',
+            'update' => 'dashboard.units.update',
+            'destroy' => 'dashboard.units.destroy',
+        ]
+    ]);
+    Route::resource('/dashboard/locations', \App\Http\Controllers\LocationController::class, [
+        'names' => [
+            'index' => 'dashboard.locations.index',
+            'create' => 'dashboard.locations.create',
+            'store' => 'dashboard.locations.store',
+            'show' => 'dashboard.locations.show',
+            'edit' => 'dashboard.locations.edit',
+            'update' => 'dashboard.locations.update',
+            'destroy' => 'dashboard.locations.destroy',
+        ]
+    ]);
+
     // Scan History
     Route::get('/dashboard/scan-history', [DashboardController::class, 'scanHistory'])->name('dashboard.scan-history');
 

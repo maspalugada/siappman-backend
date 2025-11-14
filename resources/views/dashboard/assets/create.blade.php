@@ -28,7 +28,7 @@
                         <select id="instrument_type" name="instrument_type" class="form-input" required>
                             <option value="">Select Instrument Type</option>
                             @foreach($instrumentTypes as $type)
-                                <option value="{{ $type }}" {{ old('instrument_type') === $type ? 'selected' : '' }}>{{ $type }}</option>
+                                <option value="{{ $type->name }}" {{ old('instrument_type') === $type->name ? 'selected' : '' }}>{{ $type->name }}</option>
                             @endforeach
                         </select>
                         @error('instrument_type')
@@ -41,7 +41,7 @@
                         <select id="unit" name="unit" class="form-input" required>
                             <option value="">Select Unit</option>
                             @foreach($units as $unit)
-                                <option value="{{ $unit }}" {{ old('unit') === $unit ? 'selected' : '' }}>{{ $unit }}</option>
+                                <option value="{{ $unit->name }}" {{ old('unit') === $unit->name ? 'selected' : '' }}>{{ $unit->name }}</option>
                             @endforeach
                         </select>
                         @error('unit')
@@ -62,7 +62,7 @@
                         <select id="location" name="location" class="form-input" required>
                             <option value="">Select Location</option>
                             @foreach($locations as $location)
-                                <option value="{{ $location }}" {{ old('location') === $location ? 'selected' : '' }}>{{ $location }}</option>
+                                <option value="{{ $location->name }}" {{ old('location') === $location->name ? 'selected' : '' }}>{{ $location->name }}</option>
                             @endforeach
                         </select>
                         @error('location')

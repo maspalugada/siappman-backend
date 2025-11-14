@@ -34,36 +34,9 @@ class AssetController extends Controller
      */
     public function create()
     {
-        $instrumentTypes = [
-            'STEAM',
-            'EO',
-            'DTT'
-            
-        ];
-
-        $units = [
-            'L T 8, SUKAMAN/EBONY',
-            'L T 8, SUKAMAN/SILVER',
-            'L T 7, RAWAT ANAK',
-            'L T 6, IW BEDAH',
-            'L T 6, IW MEDIKAL',
-            'L t 4, ICU DEWASA',
-            'L T 3, ICVCU MERANTI',
-            'L T 3, ICVCU CANOPUS',
-            'L T 3, ICVCU ULIN',
-            'L T 8, ICU ANAK',
-            'L T 6, ICVCU PEDIATRIK',
-            'L T 6, IW ANAK',
-            'L T 5',
-            'L T 4',
-            'L T 3',
-            'U G D'
-        ];
-
-        $locations = [
-            'Gedung VENTRICLE',
-            'Gedung PERAWATAN'
-        ];
+        $instrumentTypes = \App\Models\InstrumentType::all();
+        $units = \App\Models\Unit::all();
+        $locations = \App\Models\Location::all();
 
         return view('dashboard.assets.create', compact('instrumentTypes', 'units', 'locations'));
     }
@@ -114,38 +87,9 @@ class AssetController extends Controller
      */
     public function edit(Asset $asset)
     {
-        $instrumentTypes = [
-            'S T E A M',
-            'EO',
-            'D T T'
-        ];
-
-        $units = [
-            'L T 8, SUKAMAN/EBONY',
-            'L T 8, SUKAMAN/SILVER',
-            'L T 7, RAWAT ANAK',
-            'L T 6, IW BEDAH',
-            'L T 6, IW MEDIKAL',
-            'L T 4, ICU DEWASA',
-            'L T 3, ICVCU MERANTI',
-            'L T 3, ICVCU CANOPUS',
-            'L T 3, ICVCU ULIN',
-            'L T 8, ICU ANAK',
-            'L T 6, ICVCU PEDIATRIK',
-            'L T 6, IW ANAK',
-            'L T 5',
-            'L T 4',
-            'L T 3',
-            'U G D'
-
-
-        ];
-
-        $locations = [
-            'Gedung VENTRICLE',
-            'Gedung PERAWATAN'
-            
-        ];
+        $instrumentTypes = \App\Models\InstrumentType::all();
+        $units = \App\Models\Unit::all();
+        $locations = \App\Models\Location::all();
 
         return view('dashboard.assets.edit', compact('asset', 'instrumentTypes', 'units', 'locations'));
     }
