@@ -31,6 +31,13 @@
                 <a href="{{ route('dashboard.locations.index') }}" class="btn btn-secondary">Manage</a>
             </div>
         </div>
+        <div class="card">
+            <div class="card-body">
+                <h2 style="font-size: 1.25rem; font-weight: 600; color: var(--gray-800);">User Management</h2>
+                <p style="font-size: 2.5rem; font-weight: 700; color: var(--primary-color); margin: 1rem 0;">{{ \App\Models\User::count() }}</p>
+                <a href="{{ route('dashboard.users.index') }}" class="btn btn-secondary">Manage Users</a>
+            </div>
+        </div>
     </div>
 </div>
 @endsection

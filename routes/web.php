@@ -36,6 +36,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/home', [DashboardController::class, 'index'])->name('home');
     Route::get('/dashboard/admin', [\App\Http\Controllers\AdminDashboardController::class, 'index'])->name('dashboard.admin');
 
+    // User Management
+    Route::resource('/dashboard/users', \App\Http\Controllers\UserController::class, [
+        'names' => [
+            'index' => 'dashboard.users.index',
+            'create' => 'dashboard.users.create',
+            'store' => 'dashboard.users.store',
+            'show' => 'dashboard.users.show',
+            'edit' => 'dashboard.users.edit',
+            'update' => 'dashboard.users.update',
+            'destroy' => 'dashboard.users.destroy',
+        ]
+    ]);
+
     // QR Codes Management
     Route::get('/dashboard/qr-codes', [DashboardController::class, 'qrCodes'])->name('dashboard.qr-codes');
     Route::get('/dashboard/qr-codes/create', [DashboardController::class, 'createQrCode'])->name('dashboard.qr-codes.create');
