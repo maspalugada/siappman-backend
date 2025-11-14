@@ -90,6 +90,7 @@ class AssetController extends Controller
         $asset->description = $request->description;
         $asset->specifications = $request->specifications;
         $asset->qr_code = 'ASSET-' . strtoupper(Str::random(8));
+        $asset->status = 'active';
         $asset->save();
 
         return redirect()->route('dashboard.assets.index')->with('success', 'Asset created successfully.');
