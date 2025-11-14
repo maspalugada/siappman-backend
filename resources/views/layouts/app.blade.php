@@ -335,6 +335,12 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{ route('dashboard.admin') }}" class="{{ request()->routeIs('dashboard.admin') ? 'active' : '' }}">
+                        <div class="sidebar-icon">⚙️</div>
+                        <span class="sidebar-text">Admin</span>
+                    </a>
+                </li>
+                <li>
                     <a href="{{ route('dashboard.instrument-sets.index') }}" class="{{ request()->routeIs('dashboard.instrument-sets*') ? 'active' : '' }}">
                         <div class="sidebar-icon">-</div>
                         <span class="sidebar-text">Instrument Sets</span>

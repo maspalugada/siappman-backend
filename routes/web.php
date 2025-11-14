@@ -34,6 +34,7 @@ Route::middleware('auth')->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/home', [DashboardController::class, 'index'])->name('home');
+    Route::get('/dashboard/admin', [\App\Http\Controllers\AdminDashboardController::class, 'index'])->name('dashboard.admin');
 
     // QR Codes Management
     Route::get('/dashboard/qr-codes', [DashboardController::class, 'qrCodes'])->name('dashboard.qr-codes');
