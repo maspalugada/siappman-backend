@@ -3,6 +3,9 @@
 namespace Database\Factories;
 
 use App\Models\Asset;
+use App\Models\InstrumentType;
+use App\Models\Unit;
+use App\Models\Location;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -25,55 +28,15 @@ class AssetFactory extends Factory
      */
     public function definition(): array
     {
-        $instrumentTypes = [
-            'Pressure Gauge',
-            'Temperature Sensor',
-            'Flow Meter',
-            'Level Transmitter',
-            'Control Valve',
-            'Pump',
-            'Motor',
-            'Switch',
-            'Transducer',
-            'Analyzer'
-        ];
-
-        $units = [
-            'Bar',
-            'Psi',
-            'Celsius',
-            'Fahrenheit',
-            'Liter/min',
-            'm³/h',
-            'mm',
-            'cm',
-            'Meter',
-            'RPM',
-            'Volt',
-            'Ampere',
-            'Hz'
-        ];
-
-        $locations = [
-            'Workshop A',
-            'Workshop B',
-            'Production Line 1',
-            'Production Line 2',
-            'Storage Area',
-            'Maintenance Room',
-            'Control Room',
-            'Laboratory'
-        ];
-
         return [
             'name' => $this->faker->words(3, true),
-            'instrument_type' => $this->faker->randomElement($instrumentTypes),
-            'unit' => $this->faker->randomElement($units),
-            'location' => $this->faker->randomElement($locations),
+            'instrument_type' => InstrumentType::factory()->create()->name,
+            'unit' => Unit::factory()->create()->name,
+            'location' => Location::factory()->create()->name,
             'description' => $this->faker->optional()->paragraph(),
-            'qr_code' => 'ASSET-' . strtoupper(Str::random(8)),
+            'qr_code' => 'ASSET-' . strtoupper(Str::uuid()->toString()),
             'specifications' => $this->faker->optional()->randomElements(['Range: 0-100', 'Accuracy: ±0.5%', 'Power: 24VDC'], 2),
-            'status' => $this->faker->randomElement([Asset::STATUS_READY, Asset::STATUS_WASHING, Asset::STATUS_IN_USE]),
+            'status' => $this->faker->randomElement([Asset::STATUS_READY, Asset::STATUS_WASHING, Asset::STATUS_STERILIZING, Asset::STATUS_IN_USE, Asset::STATUS_MAINTENANCE]),
         ];
     }
 }

@@ -51,14 +51,6 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="jumlah" class="form-label">Jumlah *</label>
-                        <input type="number" id="jumlah" name="jumlah" class="form-input" value="{{ old('jumlah', $asset->jumlah) }}" min="1" required>
-                        @error('jumlah')
-                            <div style="color: var(--error); font-size: 0.875rem; margin-top: 0.25rem;">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="form-group">
                         <label for="location" class="form-label">Location *</label>
                         <select id="location" name="location" class="form-input" required>
                             <option value="">Select Location</option>

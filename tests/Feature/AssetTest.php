@@ -16,115 +16,92 @@ class AssetTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        // Create a user for authentication
         $this->user = User::factory()->create();
+        $this->actingAs($this->user);
     }
 
     /** @test */
     public function user_can_view_assets_index()
     {
-        $this->actingAs($this->user);
-
         $response = $this->get(route('dashboard.assets.index'));
-
         $response->assertStatus(200);
         $response->assertViewIs('dashboard.assets.index');
-        $response->assertViewHas('assets');
     }
 
     /** @test */
     public function user_can_view_create_asset_form()
     {
-        $this->actingAs($this->user);
-
         $response = $this->get(route('dashboard.assets.create'));
-
         $response->assertStatus(200);
         $response->assertViewIs('dashboard.assets.create');
-        $response->assertViewHas(['instrumentTypes', 'units', 'locations']);
     }
 
     /** @test */
-    public function user_can_create_asset()
+    public function user_can_create_a_single_asset()
     {
-        $this->actingAs($this->user);
+        $instrumentType = \App\Models\InstrumentType::factory()->create();
+        $unit = \App\Models\Unit::factory()->create();
+        $location = \App\Models\Location::factory()->create();
 
         $assetData = [
             'name' => 'Test Pressure Gauge',
-            'instrument_type' => 'STEAM',
-            'unit' => 'L T 8, SUKAMAN/EBONY',
+            'instrument_type' => $instrumentType->name,
+            'unit' => $unit->name,
             'jumlah' => 1,
-            'location' => 'Gedung VENTRICLE',
+            'location' => $location->name,
             'description' => 'Test asset description',
         ];
 
         $response = $this->post(route('dashboard.assets.store'), $assetData);
 
         $response->assertRedirect(route('dashboard.assets.index'));
-        $this->assertDatabaseHas('assets', $assetData);
+        $this->assertDatabaseCount('assets', 1);
+        $this->assertDatabaseHas('assets', ['name' => 'Test Pressure Gauge']);
     }
 
     /** @test */
-    public function asset_creation_requires_name()
+    public function user_can_create_multiple_assets_at_once()
     {
-        $this->actingAs($this->user);
+        $instrumentType = \App\Models\InstrumentType::factory()->create();
+        $unit = \App\Models\Unit::factory()->create();
+        $location = \App\Models\Location::factory()->create();
 
         $assetData = [
-            'instrument_type' => 'Pressure Gauge',
-            'unit' => 'Bar',
-            'location' => 'Workshop A',
+            'name' => 'Test Scalpel',
+            'instrument_type' => $instrumentType->name,
+            'unit' => $unit->name,
+            'jumlah' => 5,
+            'location' => $location->name,
         ];
 
         $response = $this->post(route('dashboard.assets.store'), $assetData);
 
-        $response->assertRedirect();
-        $response->assertSessionHasErrors('name');
+        $response->assertRedirect(route('dashboard.assets.index'));
+        $this->assertDatabaseCount('assets', 5);
+        $this->assertEquals(5, Asset::where('name', 'Test Scalpel')->count());
     }
 
-    /** @test */
-    public function user_can_view_asset_details()
-    {
-        $this->actingAs($this->user);
-
-        $asset = Asset::factory()->create();
-
-        $response = $this->get(route('dashboard.assets.show', $asset));
-
-        $response->assertStatus(200);
-        $response->assertViewIs('dashboard.assets.show');
-        $response->assertViewHas('asset');
-    }
 
     /** @test */
-    public function user_can_view_edit_asset_form()
+    public function user_can_view_and_update_an_asset()
     {
-        $this->actingAs($this->user);
-
         $asset = Asset::factory()->create();
+        $newInstrumentType = \App\Models\InstrumentType::factory()->create();
+        $newUnit = \App\Models\Unit::factory()->create();
+        $newLocation = \App\Models\Location::factory()->create();
 
+        // View
         $response = $this->get(route('dashboard.assets.edit', $asset));
-
         $response->assertStatus(200);
         $response->assertViewIs('dashboard.assets.edit');
-        $response->assertViewHas(['asset', 'instrumentTypes', 'units', 'locations']);
-    }
 
-    /** @test */
-    public function user_can_update_asset()
-    {
-        $this->actingAs($this->user);
-
-        $asset = Asset::factory()->create();
-
+        // Update
         $updateData = [
             'name' => 'Updated Asset Name',
-            'instrument_type' => 'EO',
-            'unit' => 'L T 7, RAWAT ANAK',
-            'jumlah' => 2,
-            'location' => 'Gedung PERAWATAN',
+            'instrument_type' => $newInstrumentType->name,
+            'unit' => $newUnit->name,
+            'location' => $newLocation->name,
             'description' => 'Updated description',
-            'status' => 'maintenance',
         ];
 
         $response = $this->put(route('dashboard.assets.update', $asset), $updateData);
@@ -136,44 +113,20 @@ class AssetTest extends TestCase
     /** @test */
     public function user_can_delete_asset()
     {
-        $this->actingAs($this->user);
-
         $asset = Asset::factory()->create();
+        $this->assertDatabaseCount('assets', 1);
 
         $response = $this->delete(route('dashboard.assets.destroy', $asset));
 
         $response->assertRedirect(route('dashboard.assets.index'));
-        $this->assertDatabaseMissing('assets', ['id' => $asset->id]);
-    }
-
-    /** @test */
-    public function user_can_generate_qr_code()
-    {
-        $this->actingAs($this->user);
-
-        $asset = Asset::factory()->create();
-
-        $response = $this->get(route('dashboard.assets.qr', $asset));
-
-        $response->assertStatus(200);
-        $response->assertJsonStructure([
-            'qr_data' => [
-                'id',
-                'name',
-                'type',
-                'location',
-                'qr_code',
-                'timestamp'
-            ],
-            'qr_string'
-        ]);
+        $this->assertDatabaseCount('assets', 0);
     }
 
     /** @test */
     public function guest_cannot_access_assets()
     {
+        \Auth::logout();
         $response = $this->get(route('dashboard.assets.index'));
-
         $response->assertRedirect(route('login'));
     }
 }

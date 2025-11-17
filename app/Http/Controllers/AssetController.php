@@ -60,18 +60,23 @@ class AssetController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
-        $asset = new Asset();
-        $asset->name = $request->name;
-        $asset->instrument_type = $request->instrument_type;
-        $asset->unit = $request->unit;
-        $asset->jumlah = $request->jumlah;
-        $asset->location = $request->location;
-        $asset->description = $request->description;
-        $asset->specifications = $request->specifications;
-        $asset->qr_code = 'ASSET-' . strtoupper(Str::uuid()->toString());
-        $asset->save();
+        $quantity = $request->input('jumlah', 1);
 
-        return redirect()->route('dashboard.assets.index')->with('success', 'Asset created successfully.');
+        for ($i = 0; $i < $quantity; $i++) {
+            Asset::create([
+                'name' => $request->name,
+                'instrument_type' => $request->instrument_type,
+                'unit' => $request->unit,
+                'location' => $request->location,
+                'description' => $request->description,
+                'specifications' => $request->specifications,
+                'qr_code' => 'ASSET-' . strtoupper(Str::uuid()->toString()),
+            ]);
+        }
+
+        $message = $quantity > 1 ? "{$quantity} assets were created successfully." : 'Asset created successfully.';
+
+        return redirect()->route('dashboard.assets.index')->with('success', $message);
     }
 
     /**
@@ -103,11 +108,9 @@ class AssetController extends Controller
             'name' => 'required|string|max:255',
             'instrument_type' => 'required|string|max:255',
             'unit' => 'required|string|max:255',
-            'jumlah' => 'required|integer|min:1',
             'location' => 'required|string|max:255',
             'description' => 'nullable|string',
             'specifications' => 'nullable|array',
-            'status' => 'required|in:active,inactive,maintenance',
         ]);
 
         if ($validator->fails()) {
@@ -118,11 +121,9 @@ class AssetController extends Controller
             'name' => $request->name,
             'instrument_type' => $request->instrument_type,
             'unit' => $request->unit,
-            'jumlah' => $request->jumlah,
             'location' => $request->location,
             'description' => $request->description,
             'specifications' => $request->specifications,
-            'status' => $request->status,
         ]);
 
         return redirect()->route('dashboard.assets.index')->with('success', 'Asset updated successfully.');

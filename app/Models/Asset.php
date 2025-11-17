@@ -19,7 +19,6 @@ class Asset extends Model
         'name',
         'instrument_type',
         'unit',
-        'jumlah',
         'location',
         'description',
         'qr_code',
