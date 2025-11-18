@@ -14,7 +14,7 @@
             <form method="POST" action="{{ route('dashboard.assets.store') }}">
                 @csrf
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                <div class="form-grid">
                     <div class="form-group">
                         <label for="name" class="form-label">Asset Name *</label>
                         <input type="text" id="name" name="name" class="form-input" value="{{ old('name') }}" required>

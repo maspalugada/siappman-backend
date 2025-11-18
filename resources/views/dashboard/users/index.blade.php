@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="container">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <div class="page-header">
         <div>
             <h1 style="font-size: 2rem; font-weight: 700; color: var(--gray-900);">User Management</h1>
             <p style="color: var(--gray-600);">Manage your application users</p>
@@ -20,7 +20,7 @@
 
     <div class="card">
         <div class="card-body">
-            <div style="overflow-x: auto;">
+            <div class="table-responsive">
                 <table class="table">
                     <thead>
                         <tr>

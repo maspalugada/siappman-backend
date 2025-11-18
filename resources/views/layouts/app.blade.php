@@ -95,6 +95,17 @@
             background-color: var(--gray-50);
         }
 
+        .page-header {
+            background: var(--white);
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
         .card {
             background: var(--white);
             border-radius: 0.75rem;
@@ -137,6 +148,18 @@
             outline: none;
             border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(32, 178, 170, 0.1);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .navbar {
@@ -282,6 +305,7 @@
             .sidebar {
                 transform: translateX(-100%);
                 transition: transform 0.3s ease;
+                z-index: 100;
             }
 
             .sidebar.open {
@@ -290,6 +314,11 @@
 
             .main-content {
                 margin-left: 0;
+                transition: margin-left 0.3s ease;
+            }
+
+            body.sidebar-open .main-content {
+                margin-left: 280px;
             }
 
             .mobile-menu-toggle {
@@ -304,6 +333,16 @@
             font-size: 1.5rem;
             color: var(--gray-600);
             cursor: pointer;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        @media (max-width: 768px) {
+            .table {
+                min-width: 600px;
+            }
         }
     </style>
 
@@ -417,6 +456,7 @@
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             sidebar.classList.toggle('open');
+            document.body.classList.toggle('sidebar-open');
         }
 
         // Register Service Worker for PWA

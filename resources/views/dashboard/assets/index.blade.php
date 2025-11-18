@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="container">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <div class="page-header">
         <div>
             <h1 style="font-size: 2rem; font-weight: 700; color: var(--gray-900); margin-bottom: 0.5rem;">Assets Management</h1>
             <p style="color: var(--gray-600);">Manage your instruments and equipment</p>
@@ -28,7 +28,7 @@
     @if($assets->count() > 0)
         <div class="card">
             <div class="card-body">
-                <div style="overflow-x: auto;">
+                <div class="table-responsive">
                     <table style="width: 100%; border-collapse: collapse;">
                         <thead>
                             <tr style="border-bottom: 1px solid var(--gray-200);">
