@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create('scan_activities', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('qr_id')->constrained('q_r_codes')->onDelete('cascade');
+            $table->morphs('scannable'); // This adds scannable_id and scannable_type
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('action');
             $table->string('notes')->nullable();

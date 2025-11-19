@@ -15,7 +15,7 @@
                 @csrf
                 @method('PUT')
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                <div class="form-grid">
                     <div class="form-group">
                         <label for="name" class="form-label">Asset Name *</label>
                         <input type="text" id="name" name="name" class="form-input" value="{{ old('name', $asset->name) }}" required>
@@ -29,7 +29,7 @@
                         <select id="instrument_type" name="instrument_type" class="form-input" required>
                             <option value="">Select Instrument Type</option>
                             @foreach($instrumentTypes as $type)
-                                <option value="{{ $type }}" {{ old('instrument_type', $asset->instrument_type) === $type ? 'selected' : '' }}>{{ $type }}</option>
+                                <option value="{{ $type->name }}" {{ old('instrument_type', $asset->instrument_type) === $type->name ? 'selected' : '' }}>{{ $type->name }}</option>
                             @endforeach
                         </select>
                         @error('instrument_type')
@@ -42,18 +42,10 @@
                         <select id="unit" name="unit" class="form-input" required>
                             <option value="">Select Unit</option>
                             @foreach($units as $unit)
-                                <option value="{{ $unit }}" {{ old('unit', $asset->unit) === $unit ? 'selected' : '' }}>{{ $unit }}</option>
+                                <option value="{{ $unit->name }}" {{ old('unit', $asset->unit) === $unit->name ? 'selected' : '' }}>{{ $unit->name }}</option>
                             @endforeach
                         </select>
                         @error('unit')
-                            <div style="color: var(--error); font-size: 0.875rem; margin-top: 0.25rem;">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label for="jumlah" class="form-label">Jumlah *</label>
-                        <input type="number" id="jumlah" name="jumlah" class="form-input" value="{{ old('jumlah', $asset->jumlah) }}" min="1" required>
-                        @error('jumlah')
                             <div style="color: var(--error); font-size: 0.875rem; margin-top: 0.25rem;">{{ $message }}</div>
                         @enderror
                     </div>
@@ -63,7 +55,7 @@
                         <select id="location" name="location" class="form-input" required>
                             <option value="">Select Location</option>
                             @foreach($locations as $location)
-                                <option value="{{ $location }}" {{ old('location', $asset->location) === $location ? 'selected' : '' }}>{{ $location }}</option>
+                                <option value="{{ $location->name }}" {{ old('location', $asset->location) === $location->name ? 'selected' : '' }}>{{ $location->name }}</option>
                             @endforeach
                         </select>
                         @error('location')

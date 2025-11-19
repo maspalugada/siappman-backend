@@ -17,9 +17,15 @@ class AssetController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $assets = Asset::latest()->paginate(10);
+        $query = Asset::query();
+
+        if ($request->has('search')) {
+            $query->where('name', 'like', '%' . $request->input('search') . '%');
+        }
+
+        $assets = $query->latest()->paginate(10);
         return view('dashboard.assets.index', compact('assets'));
     }
 
@@ -28,36 +34,9 @@ class AssetController extends Controller
      */
     public function create()
     {
-        $instrumentTypes = [
-            'STEAM',
-            'EO',
-            'DTT'
-            
-        ];
-
-        $units = [
-            'L T 8, SUKAMAN/EBONY',
-            'L T 8, SUKAMAN/SILVER',
-            'L T 7, RAWAT ANAK',
-            'L T 6, IW BEDAH',
-            'L T 6, IW MEDIKAL',
-            'L t 4, ICU DEWASA',
-            'L T 3, ICVCU MERANTI',
-            'L T 3, ICVCU CANOPUS',
-            'L T 3, ICVCU ULIN',
-            'L T 8, ICU ANAK',
-            'L T 6, ICVCU PEDIATRIK',
-            'L T 6, IW ANAK',
-            'L T 5',
-            'L T 4',
-            'L T 3',
-            'U G D'
-        ];
-
-        $locations = [
-            'Gedung VENTRICLE',
-            'Gedung PERAWATAN'
-        ];
+        $instrumentTypes = \App\Models\InstrumentType::all();
+        $units = \App\Models\Unit::all();
+        $locations = \App\Models\Location::all();
 
         return view('dashboard.assets.create', compact('instrumentTypes', 'units', 'locations'));
     }
@@ -81,18 +60,23 @@ class AssetController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
-        $asset = new Asset();
-        $asset->name = $request->name;
-        $asset->instrument_type = $request->instrument_type;
-        $asset->unit = $request->unit;
-        $asset->jumlah = $request->jumlah;
-        $asset->location = $request->location;
-        $asset->description = $request->description;
-        $asset->specifications = $request->specifications;
-        $asset->qr_code = 'ASSET-' . strtoupper(Str::random(8));
-        $asset->save();
+        $quantity = $request->input('jumlah', 1);
 
-        return redirect()->route('dashboard.assets.index')->with('success', 'Asset created successfully.');
+        for ($i = 0; $i < $quantity; $i++) {
+            Asset::create([
+                'name' => $request->name,
+                'instrument_type' => $request->instrument_type,
+                'unit' => $request->unit,
+                'location' => $request->location,
+                'description' => $request->description,
+                'specifications' => $request->specifications,
+                'qr_code' => 'ASSET-' . strtoupper(Str::uuid()->toString()),
+            ]);
+        }
+
+        $message = $quantity > 1 ? "{$quantity} assets were created successfully." : 'Asset created successfully.';
+
+        return redirect()->route('dashboard.assets.index')->with('success', $message);
     }
 
     /**
@@ -108,38 +92,9 @@ class AssetController extends Controller
      */
     public function edit(Asset $asset)
     {
-        $instrumentTypes = [
-            'S T E A M',
-            'EO',
-            'D T T'
-        ];
-
-        $units = [
-            'L T 8, SUKAMAN/EBONY',
-            'L T 8, SUKAMAN/SILVER',
-            'L T 7, RAWAT ANAK',
-            'L T 6, IW BEDAH',
-            'L T 6, IW MEDIKAL',
-            'L T 4, ICU DEWASA',
-            'L T 3, ICVCU MERANTI',
-            'L T 3, ICVCU CANOPUS',
-            'L T 3, ICVCU ULIN',
-            'L T 8, ICU ANAK',
-            'L T 6, ICVCU PEDIATRIK',
-            'L T 6, IW ANAK',
-            'L T 5',
-            'L T 4',
-            'L T 3',
-            'U G D'
-
-
-        ];
-
-        $locations = [
-            'Gedung VENTRICLE',
-            'Gedung PERAWATAN'
-            
-        ];
+        $instrumentTypes = \App\Models\InstrumentType::all();
+        $units = \App\Models\Unit::all();
+        $locations = \App\Models\Location::all();
 
         return view('dashboard.assets.edit', compact('asset', 'instrumentTypes', 'units', 'locations'));
     }
@@ -153,11 +108,9 @@ class AssetController extends Controller
             'name' => 'required|string|max:255',
             'instrument_type' => 'required|string|max:255',
             'unit' => 'required|string|max:255',
-            'jumlah' => 'required|integer|min:1',
             'location' => 'required|string|max:255',
             'description' => 'nullable|string',
             'specifications' => 'nullable|array',
-            'status' => 'required|in:active,inactive,maintenance',
         ]);
 
         if ($validator->fails()) {
@@ -168,11 +121,9 @@ class AssetController extends Controller
             'name' => $request->name,
             'instrument_type' => $request->instrument_type,
             'unit' => $request->unit,
-            'jumlah' => $request->jumlah,
             'location' => $request->location,
             'description' => $request->description,
             'specifications' => $request->specifications,
-            'status' => $request->status,
         ]);
 
         return redirect()->route('dashboard.assets.index')->with('success', 'Asset updated successfully.');
@@ -263,7 +214,7 @@ class AssetController extends Controller
         $asset->description = $request->description;
         $asset->specifications = $request->specifications;
         $asset->status = $request->status;
-        $asset->qr_code = 'ASSET-' . strtoupper(Str::random(8));
+        $asset->qr_code = 'ASSET-' . strtoupper(Str::uuid()->toString());
         $asset->save();
 
         // Generate QR code data

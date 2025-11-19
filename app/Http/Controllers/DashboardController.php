@@ -126,7 +126,11 @@ class DashboardController extends Controller
 
     public function scanHistory()
     {
-        return view('dashboard.scan-history');
+        $scanActivities = \App\Models\ScanActivity::with('scannable', 'user')
+            ->latest('scanned_at')
+            ->paginate(20);
+
+        return view('dashboard.scan-history', compact('scanActivities'));
     }
 
     public function profile()

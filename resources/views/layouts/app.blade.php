@@ -18,6 +18,9 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet" />
 
+    <!-- Toastify.js assets -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
     <style>
         :root {
             --primary-color: #20B2AA;
@@ -92,6 +95,17 @@
             background-color: var(--gray-50);
         }
 
+        .page-header {
+            background: var(--white);
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
         .card {
             background: var(--white);
             border-radius: 0.75rem;
@@ -134,6 +148,18 @@
             outline: none;
             border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(32, 178, 170, 0.1);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .navbar {
@@ -279,6 +305,7 @@
             .sidebar {
                 transform: translateX(-100%);
                 transition: transform 0.3s ease;
+                z-index: 100;
             }
 
             .sidebar.open {
@@ -287,6 +314,11 @@
 
             .main-content {
                 margin-left: 0;
+                transition: margin-left 0.3s ease;
+            }
+
+            body.sidebar-open .main-content {
+                margin-left: 280px;
             }
 
             .mobile-menu-toggle {
@@ -301,6 +333,16 @@
             font-size: 1.5rem;
             color: var(--gray-600);
             cursor: pointer;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        @media (max-width: 768px) {
+            .table {
+                min-width: 600px;
+            }
         }
     </style>
 
@@ -332,11 +374,43 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{ route('dashboard.admin') }}" class="{{ request()->routeIs('dashboard.admin') ? 'active' : '' }}">
+                        <div class="sidebar-icon">⚙️</div>
+                        <span class="sidebar-text">Admin</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('dashboard.instrument-sets.index') }}" class="{{ request()->routeIs('dashboard.instrument-sets*') ? 'active' : '' }}">
+                        <div class="sidebar-icon">-</div>
+                        <span class="sidebar-text">Instrument Sets</span>
+                    </a>
+                </li>
+                <li>
                     <a href="{{ route('dashboard.qr-codes') }}" class="{{ request()->routeIs('dashboard.qr-codes*') ? 'active' : '' }}">
                         <div class="sidebar-icon">📱</div>
                         <span class="sidebar-text">Kode QR</span>
                     </a>
                 </li>
+                <li style="padding: 0.5rem 1rem; color: var(--gray-400); font-size: 0.875rem; font-weight: 600;">Master Data</li>
+                <li>
+                    <a href="{{ route('dashboard.instrument-types.index') }}" class="{{ request()->routeIs('dashboard.instrument-types*') ? 'active' : '' }}">
+                        <div class="sidebar-icon">-</div>
+                        <span class="sidebar-text">Instrument Types</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('dashboard.units.index') }}" class="{{ request()->routeIs('dashboard.units*') ? 'active' : '' }}">
+                        <div class="sidebar-icon">-</div>
+                        <span class="sidebar-text">Units</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('dashboard.locations.index') }}" class="{{ request()->routeIs('dashboard.locations*') ? 'active' : '' }}">
+                        <div class="sidebar-icon">-</div>
+                        <span class="sidebar-text">Locations</span>
+                    </a>
+                </li>
+                <li style="padding: 0.5rem 1rem; color: var(--gray-400); font-size: 0.875rem; font-weight: 600;">Asset Management</li>
                 <li>
                     <a href="{{ route('dashboard.assets.index') }}" class="{{ request()->routeIs('dashboard.assets*') ? 'active' : '' }}">
                         <div class="sidebar-icon">📦</div>
@@ -375,18 +449,6 @@
     @endif
 
     <main class="{{ request()->routeIs('dashboard*') || request()->routeIs('scanner') ? 'main-content' : '' }}">
-        @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        @if(session('error'))
-            <div class="alert alert-error">
-                {{ session('error') }}
-            </div>
-        @endif
-
         @yield('content')
     </main>
 
@@ -394,6 +456,7 @@
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             sidebar.classList.toggle('open');
+            document.body.classList.toggle('sidebar-open');
         }
 
         // Register Service Worker for PWA
@@ -412,5 +475,36 @@
 
     @vite(['resources/js/app.js'])
     @stack('scripts')
+
+    <!-- Toastify.js assets -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            @if(session('success'))
+                Toastify({
+                    text: "{{ session('success') }}",
+                    duration: 3000,
+                    close: true,
+                    gravity: "top", // `top` or `bottom`
+                    position: "right", // `left`, `center` or `right`
+                    backgroundColor: "linear-gradient(to right, #00b09b, #96c93d)",
+                    stopOnFocus: true, // Prevents dismissing of toast on hover
+                }).showToast();
+            @endif
+
+            @if(session('error'))
+                Toastify({
+                    text: "{{ session('error') }}",
+                    duration: 3000,
+                    close: true,
+                    gravity: "top",
+                    position: "right",
+                    backgroundColor: "linear-gradient(to right, #ff5f6d, #ffc371)",
+                    stopOnFocus: true,
+                }).showToast();
+            @endif
+        });
+    </script>
 </body>
 </html>
